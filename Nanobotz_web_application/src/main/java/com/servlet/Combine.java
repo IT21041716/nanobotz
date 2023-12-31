@@ -1,0 +1,74 @@
+package com.servlet;
+
+public class Combine {
+	
+    public Combine() {
+		super();
+	}
+
+	private int id;
+    private String username;
+    private String salutation;
+    private String firstname;
+    private String lastname;
+    private String tell;
+    private String address;
+    private String email;
+    private int points;
+    
+	public Combine(int id, String username, String salutation,
+			String firstname, String lastname, String tell, String address, String email, int points) {
+		this.id = id;
+		this.username = username;
+		this.salutation = salutation;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.tell = tell;
+		this.address = address;
+		this.email = email;
+		this.points= points;
+	}
+
+	public int getPoints() {
+		return points;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+
+	public String getUsername() {
+		return username;
+	}
+
+	public String getSalutation() {
+		return salutation;
+	}
+
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+
+	public String getLastname() {
+		return lastname;
+	}
+
+
+	public String getTell() {
+		return tell;
+	}
+
+
+	public String getAddress() {
+		return address;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+
+}
