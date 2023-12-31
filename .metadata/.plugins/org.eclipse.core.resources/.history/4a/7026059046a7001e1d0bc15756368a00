@@ -1,0 +1,49 @@
+//package com.servlet;
+//
+//import java.io.IOException;
+//import javax.servlet.ServletException;
+//import javax.servlet.annotation.WebServlet;
+//import javax.servlet.http.HttpServlet;
+//import javax.servlet.http.HttpServletRequest;
+//import javax.servlet.http.HttpServletResponse;
+//
+//@WebServlet("/save_invoice_servlet")
+//public class save_invoice_servlet extends HttpServlet {
+//	private static final long serialVersionUID = 1L;
+//
+//	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+//			throws ServletException, IOException {
+//
+//		boolean isTrue = false;
+//		
+//		String ProductID = request.getParameter("pid");
+//		String UserID = request.getParameter("uid");
+//		String date = request.getParameter("date");
+//		int pid = 0;
+//		int uid = 0;
+//		double totPrice = 0.0;
+//		int points = 0;
+//		
+//		try {
+//			pid = Integer.parseInt(ProductID);
+//			uid = Integer.parseInt(UserID);
+//			
+//		} catch (NumberFormatException e) {
+//			e.printStackTrace();
+//		}
+//		
+//
+//	
+//		isTrue = DBUtill.generateInvoice(uid, date, totPrice, points, qty, pid);
+//		if (isTrue == true) {
+//			System.out.println("success..!!");
+//		} else {
+//			System.out.println("failed...!");
+//		}
+//
+//		request.getRequestDispatcher("success.jsp").forward(request, response);
+//		;
+//
+//	}
+//
+//}

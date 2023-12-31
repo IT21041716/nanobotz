@@ -1,0 +1,48 @@
+package com.servlet;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class profile_servlet
+ */
+@WebServlet("/profile_servlet")
+public class profile_servlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		String UserID = request.getParameter("uid");
+		int uid = 0;
+
+		try {
+			uid = Integer.parseInt(UserID);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			List<Combine> prifileDetails =DBUtill.userDetails(uid);
+			request.setAttribute("prifileDetails", prifileDetails);
+			
+			Combine c = new Combine();
+			
+			System.out.println(c.getId());
+			System.out.println(c.getUsername());
+			System.out.println(c.getSalutation());
+
+			request.getRequestDispatcher("profile.jsp").forward(request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+}

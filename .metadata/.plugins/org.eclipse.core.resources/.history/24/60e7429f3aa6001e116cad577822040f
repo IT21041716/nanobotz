@@ -1,0 +1,96 @@
+package com.servlet;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+public class DBUtill {
+
+	private static Connection con = null;
+	private static Statement stmt = null;
+	private static ResultSet rs = null;
+
+	// register account
+	public static boolean registerUser(String salutation, String firstname, String lastname, String tell,
+			String address, String email, String username, String password) {
+
+		boolean isSuccess = false;
+
+		try {
+			con = DbConnect.getConnection();
+			stmt = con.createStatement();
+
+			// save details inside profile table
+			String profileDetailssql = "INSERT INTO profile VALUES(0, '" + salutation + "', '" + firstname + "' , '"
+					+ lastname + "', '" + tell + "', '" + address + "' , '" + email + "')";
+			int response = stmt.executeUpdate(profileDetailssql);
+
+			if (response > 0) {
+				// Fetch user details from the profile table providing email
+				String selectProfileSql = "SELECT id FROM profile WHERE email = '" + email + "'";
+				ResultSet profileResult = stmt.executeQuery(selectProfileSql);
+
+				if (profileResult.next()) {
+					int profileId = profileResult.getInt("id");
+
+					// Now, you can insert the user details into the login table
+					String insertLoginSql = "INSERT INTO login VALUES (0 , '" + username + "' , '" + password + "' , '"
+							+ profileId + "')";
+					int loginInsertResponse = stmt.executeUpdate(insertLoginSql);
+
+					// Check if the insertion into the login table was successful
+					if (loginInsertResponse > 0) {
+						isSuccess = true;
+					}else {
+						isSuccess = false;
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return true;
+	}
+
+	// validate login
+
+	public static List<login> validate(String username, String password) {
+
+		ArrayList<login> userDetails = new ArrayList<>();
+
+		String url = "jdbc:mysql://localhost:3306/demo_db";
+		String user = "root";
+		String pass = "Sithanga@1231";
+
+		// validate
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+
+			Connection con = DriverManager.getConnection(url, user, pass);
+			Statement stmt = con.createStatement();
+			String sql = "selct * from login where username = '" + username + "' and password = '" + password + "'";
+			ResultSet rs = stmt.executeQuery(sql);
+
+			if (rs.next()) {
+				int id = rs.getInt(1);
+				String name = rs.getString(2);
+				String pwd = rs.getString(3);
+				String profile_id = rs.getString(4);
+
+				login l = new login(id, name, pwd, profile_id);
+				userDetails.add(l);
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return userDetails;
+	}
+}

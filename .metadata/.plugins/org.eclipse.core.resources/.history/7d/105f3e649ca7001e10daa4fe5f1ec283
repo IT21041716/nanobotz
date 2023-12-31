@@ -1,0 +1,38 @@
+package com.servlet;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/points_servlet")
+public class points_servlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		String profileId = request.getParameter("uid");
+		int pid =0;
+		
+		
+		try {
+			if (profileId != null) {
+				pid = Integer.parseInt(profileId);
+		    }
+		}catch(NumberFormatException e) {
+			e.printStackTrace();
+		}
+		
+		
+		try {
+			int points = DBUtill.totalPoints(pid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+}

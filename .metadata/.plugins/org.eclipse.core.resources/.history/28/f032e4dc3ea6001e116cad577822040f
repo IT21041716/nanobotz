@@ -1,0 +1,31 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Register Page</title>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js">
+</script>
+</head>
+<body>
+
+	<form action='/register_servlet' method='post'>
+		Salutation <input type='text' name='salutation'><br>
+		FirstName <input type='text' name='firstname'><br>
+		LastName <input type='text' name='lastname'><br>
+		Tell <input type='text' name='tell'><br> 
+		Address <input type='text' name='address'><br> 
+		Email <input type='text' name='email'><br> 
+		UserName <input type='text' name='username'><br> 
+		Password <input type='password' name='password'><br>
+		
+		<input type='submit' name='submit' value='Register'>
+
+
+	</form>
+
+</body>
+</html>

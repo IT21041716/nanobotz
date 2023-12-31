@@ -1,0 +1,143 @@
+package com.servlet;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+public class DBUtill {
+
+	private static Connection con = null;
+	private static Statement stmt = null;
+	private static ResultSet rs = null;
+
+	// register account
+	public static boolean registerUser(String salutation, String firstname, String lastname, String tell,
+			String address, String email, String username, String password) {
+
+		boolean isSuccess = false;
+
+		try {
+			con = DbConnect.getConnection();
+			stmt = con.createStatement();
+
+			// save details inside profile table
+			String profileDetailssql = "INSERT INTO profile VALUES(0, '" + salutation + "', '" + firstname + "' , '"
+					+ lastname + "', '" + tell + "', '" + address + "' , '" + email + "')";
+			int response = stmt.executeUpdate(profileDetailssql);
+
+			if (response > 0) {
+				// Fetch user details from the profile table providing email
+				String selectProfileSql = "SELECT id FROM profile WHERE email = '" + email + "'";
+				ResultSet profileResult = stmt.executeQuery(selectProfileSql);
+
+				if (profileResult.next()) {
+					int profileId = profileResult.getInt("id");
+
+					// Now, you can insert the user details into the login table
+					String insertLoginSql = "INSERT INTO login VALUES (0 , '" + username + "' , '" + password + "' , '"
+							+ profileId + "')";
+					int loginInsertResponse = stmt.executeUpdate(insertLoginSql);
+
+					// Check if the insertion into the login table was successful
+					if (loginInsertResponse > 0) {
+						isSuccess = true;
+					} else {
+						isSuccess = false;
+					}
+				}
+			} else {
+				isSuccess = false;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return isSuccess;
+	}
+
+	// validate login
+	public static List<Combine> validate(String username, String password) {
+
+		ArrayList<Combine> userDetails = new ArrayList<>();
+
+		// validate
+		try {
+			con = DbConnect.getConnection();
+			stmt = con.createStatement();
+
+			String sql = "select * from login where username = '" + username + "' and password = '" + password + "'";
+			ResultSet rs = stmt.executeQuery(sql);
+
+			if (rs.next()) {
+				int id = rs.getInt(1);
+				String name = rs.getString(2);
+				String pwd = rs.getString(3);
+				String profile_id = rs.getString(4);
+
+				login loginObj = new login(id, name, pwd, profile_id);
+
+				// Retrieve user details from the profile table using the profile_id
+				String profileQuery = "SELECT * FROM profile WHERE id = '" + profile_id + "'";
+				ResultSet profileRs = stmt.executeQuery(profileQuery);
+
+				if (profileRs.next()) {
+					// Assuming profile table has columns like profile_id, profile_name,
+					// profile_details, etc.
+					int pid = profileRs.getInt(1);
+					String salutation = profileRs.getString(2);
+					String firstname = profileRs.getString(3);
+					String lastname = profileRs.getString(4);
+					String tell = profileRs.getString(5);
+					String address = profileRs.getString(6);
+					String email = profileRs.getString(7);
+
+					// Create a CombinedDetails object with details from both login and profile
+
+					Combine combinedDetails = new Combine(id, name, profile_id, salutation, firstname, lastname, tell,
+							address, email);
+					userDetails.add(combinedDetails);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return userDetails;
+	}
+
+	
+	//insert new  product
+	public static boolean insertProduct(String name, String brand, double price) {
+
+		boolean isSuccess = false;
+
+		try {
+			con = DbConnect.getConnection();
+			stmt = con.createStatement();
+			
+			String insetQuery = "INSERT INTO product VALUES(0, '" + name+ "', '"+brand+"' , '"+price+"')";
+			int response = stmt.executeUpdate(insetQuery);
+			
+			if (response > 0) {
+	            isSuccess = true;
+	        } else {
+	            isSuccess = false;
+	        }
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return isSuccess;
+	}
+
+	public static List<product> getProducts() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}

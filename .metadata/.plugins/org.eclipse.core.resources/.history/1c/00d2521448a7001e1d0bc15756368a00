@@ -1,0 +1,51 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+        $(document).ready(function () {
+            // Get the UID from the session
+            var UID = ${sessionScope.UID};
+
+            alert(UID)
+            // Perform AJAX call to the servlet
+            $.ajax({
+                type: 'POST',
+                url: 'points_servlet', 
+                data: {
+                    uid: UID
+                },
+                success: function (response) {
+                    console.log(response);
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    </script>
+
+</head>
+<body>
+
+	<c:forEach var='details' items="${userDetails}">
+	
+	${details.id}
+	${details.username}
+	${details.profile_id}
+	${details.salutation}
+	${details.firstname}
+	${details.lastname}
+	${details.tell}
+	${details.address}
+	${details.email}
+	</c:forEach>
+
+</body>
+</html>

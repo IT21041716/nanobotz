@@ -1,0 +1,7 @@
+@charset "ISO-8859-1";
+
+.logo_img{
+	margin-left: 150px;
+	margin-right: auto;
+	margin-bottom: 30px;
+}

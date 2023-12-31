@@ -1,0 +1,15 @@
+@charset "ISO-8859-1";
+
+.logo_img{
+	margin-left: 150px;
+	margin-right: auto;
+	margin-bottom: 30px;
+}
+
+.hero_section {
+    background-image: url('https://images.freeimages.com/images/large-previews/f04/handcrafting-1624772.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 40vh;
+}

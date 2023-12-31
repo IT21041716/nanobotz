@@ -1,0 +1,50 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Products list</title>
+</head>
+<body>
+
+	<table>
+		<tr>
+			<th>Id</th>
+			<th>Name</th>
+			<th>Brand</th>
+			<th>Price</th>
+		</tr>
+
+		<c:forEach items="${productList}" var="item">
+			<tr>
+				<td>${item.id}</td>
+				<td>${item.name}</td>
+				<td>${item.brand}</td>
+				<td>${item.price}</td>
+				<td>
+					<button
+						onclick="redirectToBuyNow('${item.id}', '${item.name}', '${item.price}')">Buy
+						Now</button>
+				</td>
+			</tr>
+		</c:forEach>
+
+	</table>
+
+	<script>
+		function redirectToBuyNow(itemId, itemName, itemPrice) {
+			// Construct the URL with parameters
+			var url = 'buynow.jsp?id=' + encodeURIComponent(itemId) + '&name='
+					+ encodeURIComponent(itemName) + '&price='
+					+ encodeURIComponent(itemPrice);
+
+			// Redirect to the Buy Now page
+			window.location.href = url;
+		}
+	</script>
+
+
+</body>
+</html>

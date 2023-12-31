@@ -1,0 +1,47 @@
+package com.servlet;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+@WebServlet("/register_servlet")
+public class register_servlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		String salutation = request.getParameter("salutation");
+		String firstname = request.getParameter("firstname");
+		String lastname = request.getParameter("lastname");
+		String tell = request.getParameter("tell");
+		String address = request.getParameter("address");
+		String email = request.getParameter("email");
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		
+		boolean isTrue = false;
+		
+		try {
+			isTrue = DBUtill.registerUser(salutation, firstname, lastname, tell, address, email, username, password);
+			if(isTrue == true) {
+				System.out.println("success..!!");
+			}else {
+				System.out.println("failed...!");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		RequestDispatcher dis = request.getRequestDispatcher("success.jsp");
+		dis.forward(request, response);
+		
+		
+	}
+
+}

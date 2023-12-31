@@ -1,0 +1,50 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Get the UID from the hidden input field
+        var UID = $('#hiddenUID').val();
+
+        // Perform AJAX call to the servlet
+        $.ajax({
+            type : 'POST',
+            url : 'profile',
+            data : {
+                uid : UID
+            },
+            success : function(response) {
+                console.log(response);
+                $('#profileDetailsContainer').html(response);
+            },
+            error : function(error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+</script>
+
+</head>
+<body>
+	<!-- Hidden input field to store the session attribute value -->
+	<input type="hidden" id="hiddenUID" value="${sessionScope.UID}" />
+
+	helloo this is profile page
+	<h2>User Profile Details</h2>
+	<div id="profileDetailsContainer">
+
+		<c:forEach var="profile" items="${profileDetails}">
+			<c:out value="${profile.id}" />
+			<br />
+		</c:forEach>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+@charset "ISO-8859-1";
+
+.logo_img{
+	margin-left: 150px;
+	margin-right: auto;
+	margin-bottom: 30px;
+}
+
+.hero_section {
+    background-image: url('/Nanobotz_web_application/assets/black.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 20vh;
+}

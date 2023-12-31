@@ -1,0 +1,50 @@
+package com.servlet;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/invoice_servlet")
+public class invoice_servlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		String ProductID = request.getParameter("uid");
+		String UserID = request.getParameter("pid");
+		String itemPrice = request.getParameter("itemPrice");
+		String quantity = request.getParameter("quantity");
+		String date = request.getParameter("date");
+
+		double price = 0.0;
+		int qty = 0;
+		int points = 0;
+
+		try {
+			price = Double.parseDouble(itemPrice);
+			qty = Integer.parseInt(quantity);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+
+		try {
+
+		} catch (Exception e) {
+			if (price >= 500 && price < 1500) {
+				points = points + 5;
+			} else if (price >= 1500 && price < 5000) {
+				points = points + 30;
+			} else if (price >= 5000 && price < 10000) {
+				points = points + 80;
+			}else if(price >=10000) {
+				points = (int) (price / 10000) * 200 ;
+			}
+		}
+
+	}
+
+}

@@ -1,0 +1,218 @@
+package com.servlet;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class DBUtill {
+
+	private static Connection con = null;
+	private static Statement stmt = null;
+	private static ResultSet rs = null;
+
+	// register account
+	public static boolean registerUser(String salutation, String firstname, String lastname, String tell,
+			String address, String email, String username, String password) {
+
+		boolean isSuccess = false;
+
+		try {
+			con = DbConnect.getConnection();
+			stmt = con.createStatement();
+
+			// save details inside profile table
+			String profileDetailssql = "INSERT INTO profile VALUES(0, '" + salutation + "', '" + firstname + "' , '"
+					+ lastname + "', '" + tell + "', '" + address + "' , '" + email + "')";
+			int response = stmt.executeUpdate(profileDetailssql);
+
+			if (response > 0) {
+				// Fetch user details from the profile table providing email
+				String selectProfileSql = "SELECT id FROM profile WHERE email = '" + email + "'";
+				ResultSet profileResult = stmt.executeQuery(selectProfileSql);
+
+				if (profileResult.next()) {
+					int profileId = profileResult.getInt("id");
+
+					String insertLoginSql = "INSERT INTO login VALUES (0 , '" + username + "' , '" + password + "' , '"
+							+ profileId + "')";
+					int loginInsertResponse = stmt.executeUpdate(insertLoginSql);
+
+					// Check if the insertion into the login table was successful
+					if (loginInsertResponse > 0) {
+						isSuccess = true;
+					} else {
+						isSuccess = false;
+					}
+				}
+			} else {
+				isSuccess = false;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return isSuccess;
+	}
+
+	// validate login
+	public static List<Combine> validate(String username, String password) {
+
+		ArrayList<Combine> userDetails = new ArrayList<>();
+
+		// validate
+		try {
+			con = DbConnect.getConnection();
+			stmt = con.createStatement();
+
+			String sql = "select * from login where username = '" + username + "' and password = '" + password + "'";
+			ResultSet rs = stmt.executeQuery(sql);
+
+			if (rs.next()) {
+				int id = rs.getInt(1);
+				String name = rs.getString(2);
+				String pwd = rs.getString(3);
+				String profile_id = rs.getString(4);
+
+				login loginObj = new login(id, name, pwd, profile_id);
+
+				String profileQuery = "SELECT * FROM profile WHERE id = '" + profile_id + "'";
+				ResultSet profileRs = stmt.executeQuery(profileQuery);
+
+				if (profileRs.next()) {
+
+					int pid = profileRs.getInt(1);
+					String salutation = profileRs.getString(2);
+					String firstname = profileRs.getString(3);
+					String lastname = profileRs.getString(4);
+					String tell = profileRs.getString(5);
+					String address = profileRs.getString(6);
+					String email = profileRs.getString(7);
+
+					Combine combinedDetails = new Combine(id, name, profile_id, salutation, firstname, lastname, tell,
+							address, email);
+					userDetails.add(combinedDetails);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return userDetails;
+	}
+
+	// insert new product
+	public static boolean insertProduct(String name, String brand, double price) {
+
+		boolean isSuccess = false;
+
+		try {
+			con = DbConnect.getConnection();
+			stmt = con.createStatement();
+
+			String insetQuery = "INSERT INTO product VALUES(0, '" + name + "', '" + brand + "' , '" + price + "')";
+			int response = stmt.executeUpdate(insetQuery);
+
+			if (response > 0) {
+				isSuccess = true;
+			} else {
+				isSuccess = false;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return isSuccess;
+	}
+
+	// retrive all products exist
+	public static List<product> getProducts() {
+
+		ArrayList<product> productList = new ArrayList<>();
+
+		try {
+			con = DbConnect.getConnection();
+			stmt = con.createStatement();
+
+			String sqlQuery = "SELECT * FROM product";
+			rs = stmt.executeQuery(sqlQuery);
+
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String name = rs.getString(2);
+				String brand = rs.getString(3);
+				double price = rs.getDouble(4);
+
+				product product = new product(id, name, brand, price);
+				productList.add(product);
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return productList;
+	}
+
+	// save invoice
+	public static boolean generateInvoice(int uid, String date, double totalPrice, int points, int qty, int pid) {
+		boolean isSuccess = false;
+
+		try {
+			con = DbConnect.getConnection();
+			stmt = con.createStatement();
+			
+			
+            // Parse the incoming date string
+            SimpleDateFormat inputFormat = new SimpleDateFormat("MM/dd/yyyy, hh:mm a");
+            Date newdate = inputFormat.parse(date);
+
+            // Format the date as per MySQL datetime format
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String formattedDate = outputFormat.format(newdate);
+			
+			
+			
+
+			String insetQuery = "INSERT INTO invoice VALUES(0, '" + formattedDate + "', '" + totalPrice + "' , '" + points
+					+ "' , '" + uid + "')";
+			int response = stmt.executeUpdate(insetQuery);
+
+			if (response > 0) {
+				String retrieveQuery = "SELECT * FROM invoice ORDER BY id DESC LIMIT 1";
+				ResultSet retirveResult = stmt.executeQuery(retrieveQuery);
+
+				if (retirveResult.next()) {
+					int invoiceId = retirveResult.getInt("id");
+
+					String insertquery2 = "INSERT INTO invoice_has_product VALUES (0 , '" + invoiceId + "' , '" + pid
+							+ "' , '" + qty + "', '" + totalPrice + "')";
+
+					int response2 = stmt.executeUpdate(insertquery2);
+
+					if (response2 > 0) {
+						isSuccess = true;
+					} else {
+						isSuccess = false;
+					}
+				}
+			} else {
+				isSuccess = false;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return isSuccess;
+
+	}
+}

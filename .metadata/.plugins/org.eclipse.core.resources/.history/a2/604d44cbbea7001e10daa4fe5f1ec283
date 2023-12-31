@@ -1,0 +1,15 @@
+@charset "ISO-8859-1";
+
+.logo_img{
+	margin-left: 150px;
+	margin-right: auto;
+	margin-bottom: 30px;
+}
+
+.hero_section {
+    background-image: url('E:\Java workspace\Nanobotz_web_application\src\main\webapp\assert\OIP.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 20vh;
+}
