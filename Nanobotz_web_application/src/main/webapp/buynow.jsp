@@ -12,12 +12,10 @@
 			.ready(
 					function() {
 
-						// Function to handle quantity change and update invoice and points
 						function updateInvoiceAndPoints() {
 							var itemPrice = parseFloat($('#itemPrice').val());
 							var quantity = parseInt($('#quantity').val());
 
-							// AJAX call to the servlet to calculate points and update UI
 							$.ajax({
 								type : 'POST',
 								url : 'invoice_servlet',
